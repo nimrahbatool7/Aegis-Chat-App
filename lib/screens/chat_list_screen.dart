@@ -1,12 +1,39 @@
 import 'package:flutter/material.dart';
-
-import '../widgets/chat_title.dart';
+import '../widgets/chat_title.dart'; // Fixed import name
 import '../utils/constants.dart';
 import 'contacts_screen.dart';
 import 'chat_screen.dart';
 
 class ChatListScreen extends StatelessWidget {
   const ChatListScreen({super.key});
+
+  void _showAdminMenu(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      builder: (context) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Settings'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.admin_panel_settings),
+            title: const Text('Admin Panel'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, AppRoutes.adminDashboard);
+            },
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +49,9 @@ class ChatListScreen extends StatelessWidget {
           ),
           IconButton(
             icon: const Icon(Icons.more_vert),
-            onPressed: () {},
+            onPressed: () {
+              _showAdminMenu(context);
+            },
           ),
           IconButton(
             icon: const Icon(Icons.settings),
@@ -59,7 +88,7 @@ class ChatListScreen extends StatelessWidget {
             ),
           ),
 
-          /// Search bar
+          // Search bar
           Padding(
             padding: const EdgeInsets.all(12),
             child: TextField(
@@ -70,7 +99,7 @@ class ChatListScreen extends StatelessWidget {
             ),
           ),
 
-          /// Chat list
+          // Chat list
           Expanded(
             child: ListView.builder(
               itemCount: DummyData.chats.length,
@@ -107,6 +136,7 @@ class ChatListScreen extends StatelessWidget {
     );
   }
 }
+
 class _TopNavButton extends StatelessWidget {
   final IconData icon;
   final String label;

@@ -21,6 +21,14 @@ import 'utils/constants.dart';
 import 'models/threat_model.dart';
 import 'models/contact_model.dart';
 
+
+import 'screens/admin_dashboard_screen.dart';
+import 'screens/user_management_screen.dart';
+import 'screens/user_details_screen.dart';
+import 'screens/system_health_screen.dart';
+import 'screens/ml_analytics_screen.dart';
+import 'screens/activity_summary_screen.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -157,7 +165,16 @@ class MyApp extends StatelessWidget {
         '/privacy-settings': (_) => const PrivacySettingsScreen(),
         '/active-devices': (_) => const ActiveDevicesScreen(),
         '/session-expired': (_) => const SessionExpiredScreen(),
-
+  AppRoutes.adminDashboard: (_) => const AdminDashboardScreen(),
+  AppRoutes.userManagement: (_) => const UserManagementScreen(),
+  AppRoutes.systemHealth: (_) => const SystemHealthScreen(),
+  AppRoutes.mlAnalytics: (_) => const MLAnalyticsScreen(),
+  AppRoutes.activitySummary: (_) => const ActivitySummaryScreen(),
+  
+  AppRoutes.userDetails: (context) {
+    final args = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
+    return UserDetailsScreen(userData: args);
+  },
         '/contact-profile': (context) {
           final contact =
               ModalRoute.of(context)!.settings.arguments as Contact;

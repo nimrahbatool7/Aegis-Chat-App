@@ -9,7 +9,6 @@ class MediaAttachmentOptions extends StatelessWidget {
     this.onAttachmentSelected,
   });
 
-// In _handleAttachmentTap method of media_attachment_options.dart
 void _handleAttachmentTap(String type, BuildContext context) {
   Navigator.pop(context); // Close bottom sheet
   

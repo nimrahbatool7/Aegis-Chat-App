@@ -1,3 +1,4 @@
+// lib/widgets/contact_tile.dart
 import 'package:flutter/material.dart';
 import '../models/contact_model.dart';
 import '../utils/constants.dart';
@@ -5,77 +6,182 @@ import '../utils/constants.dart';
 class ContactTile extends StatelessWidget {
   final Contact contact;
   final VoidCallback onTap;
+  final bool showInviteButton;
 
   const ContactTile({
     super.key,
     required this.contact,
     required this.onTap,
+    this.showInviteButton = true,
   });
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      onTap: onTap,
-      leading: CircleAvatar(
-        backgroundColor: AppColors.accentGreen,
-        child: Text(
-          contact.avatar,
-          style: const TextStyle(color: Colors.white),
-        ),
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      color: isDark ? AppColors.surfaceDark : Colors.white,
+      elevation: 1,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
       ),
-      title: Text(
-        contact.name,
-        style: const TextStyle(
-          fontSize: 16,
-          color: AppColors.textPrimaryDark,
-        ),
-      ),
-      subtitle: Row(
-        children: [
-          if (contact.isOnAegis)
+      child: ListTile(
+        onTap: onTap,
+        leading: Stack(
+          children: [
+            // Avatar
             Container(
-              width: 8,
-              height: 8,
+              width: 50,
+              height: 50,
               decoration: BoxDecoration(
-                color: contact.isOnline ? Colors.green : AppColors.textSecondaryDark,
-                shape: BoxShape.circle,
+                color: _getAvatarColor(contact, isDark),
+                borderRadius: BorderRadius.circular(25),
+              ),
+              child: Center(
+                child: Text(
+                  contact.avatar,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ),
-          if (contact.isOnAegis)
-            const SizedBox(width: 6),
-          Text(
-            contact.status,
-            style: TextStyle(
-              color: contact.isOnAegis 
-                  ? (contact.isOnline 
-                      ? Colors.green  // Green for online
-                      : AppColors.textSecondaryDark)  // Grey for offline
-                  : AppColors.textDisabledDark,  // Dim for non-Aegis
-              fontSize: 14,
+            // Online indicator
+            if (contact.isOnAegis && contact.isOnline)
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: 14,
+                  height: 14,
+                  decoration: BoxDecoration(
+                    color: AppColors.accentGreen,
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: isDark ? AppColors.backgroundDark : Colors.white,
+                      width: 2,
+                    ),
+                  ),
+                ),
+              ),
+          ],
+        ),
+        title: Row(
+          children: [
+            Text(
+              contact.name,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                color: isDark ? AppColors.textPrimaryDark : Colors.black,
+              ),
             ),
+            const SizedBox(width: 8),
+            if (contact.isOnAegis)
+              Icon(
+                Icons.verified,
+                size: 16,
+                color: AppColors.accentGreen,
+              ),
+          ],
+        ),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4.0),
+          child: Row(
+            children: [
+              Icon(
+                _getStatusIcon(contact),
+                size: 14,
+                color: _getStatusColor(contact, isDark),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  contact.status,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: _getStatusColor(contact, isDark),
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
+        trailing: _buildTrailingWidget(contact, isDark),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 8,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
-      trailing: !contact.isOnAegis
-          ? ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.accentGreen,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              child: const Text(
-                'Invite',
-                style: TextStyle(color: Colors.white),
-              ),
-            )
-          : null,
-      tileColor: Colors.transparent,
     );
+  }
+
+  Color _getAvatarColor(Contact contact, bool isDark) {
+    if (!contact.isOnAegis) {
+      return Colors.grey;
+    }
+    return isDark ? AppColors.accentBlue : AppColors.primaryLight;
+  }
+
+  Color _getStatusColor(Contact contact, bool isDark) {
+    if (!contact.isOnAegis) {
+      return AppColors.textDisabledDark;
+    }
+    if (contact.isOnline) {
+      return AppColors.accentGreen;
+    }
+    return isDark ? AppColors.textSecondaryDark : Colors.grey[600]!;
+  }
+
+  IconData _getStatusIcon(Contact contact) {
+    if (!contact.isOnAegis) {
+      return Icons.error_outline;
+    }
+    if (contact.isOnline) {
+      return Icons.circle;
+    }
+    return Icons.access_time;
+  }
+
+  Widget _buildTrailingWidget(Contact contact, bool isDark) {
+    if (contact.isOnAegis) {
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.accentGreen.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Icon(
+          Icons.chat,
+          size: 20,
+          color: AppColors.accentGreen,
+        ),
+      );
+    } else if (showInviteButton) {
+      return OutlinedButton(
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          foregroundColor: AppColors.accentGreen,
+          side: BorderSide(color: AppColors.accentGreen),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ),
+        child: const Text(
+          'Invite',
+          style: TextStyle(fontSize: 14),
+        ),
+      );
+    }
+    return const SizedBox.shrink();
   }
 }

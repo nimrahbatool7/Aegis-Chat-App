@@ -3,12 +3,14 @@ import '../models/chat_model.dart';
 import '../models/contact_model.dart';
 
 class AppColors {
+  static const Color accentRed = Color(0xFFF44336);
+
   static const Color primaryLight = Color(0xFF075E54);
   static const Color secondaryLight = Color(0xFF128C7E);
   static const Color lightGreen = Color(0xFF25D366);
   static const Color chatBgLight = Color(0xFFECE5DD);
   static const Color myMessageLight = Color(0xFFDCF8C6);
-  static const Color theirMessageLight = Color(0xFFFFFFFF);
+  static const Color theirMessageLight = Color.fromARGB(255, 14, 6, 6);
 
   static const Color primaryDark = Color(0xFF1F1F1F);
   static const Color secondaryDark = Color(0xFF242424);
@@ -35,6 +37,13 @@ class AppRoutes {
   static const verify = '/verify';
   static const mediaPreview = '/media-preview';
   static const threatWarning = '/threat-warning';
+
+  static const adminDashboard = '/admin-dashboard';
+static const userManagement = '/user-management';
+static const userDetails = '/user-details';
+static const systemHealth = '/system-health';
+static const mlAnalytics = '/ml-analytics';
+static const activitySummary = '/activity-summary';
 }
 
 class DummyData {

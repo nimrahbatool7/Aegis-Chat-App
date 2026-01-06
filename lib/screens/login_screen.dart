@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import 'chat_list_screen.dart';
+import '../utils/constants.dart'; // Add this import
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -18,14 +18,14 @@ class LoginScreen extends StatelessWidget {
           padding: const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              _Header(),
-              SizedBox(height: 40),
-              _PhoneInput(),
-              SizedBox(height: 20),
-              _ContinueButton(),
-              SizedBox(height: 24),
-              _TestLinks(),
+            children: [
+              const _Header(),
+              const SizedBox(height: 40),
+              const _PhoneInput(),
+              const SizedBox(height: 20),
+              const _ContinueButton(),
+              const SizedBox(height: 24),
+              _TestLinks(), // Removed const
             ],
           ),
         ),
@@ -34,10 +34,7 @@ class LoginScreen extends StatelessWidget {
   }
 }
 
-
 /// HEADER
-
-
 class _Header extends StatelessWidget {
   const _Header();
 
@@ -55,10 +52,7 @@ class _Header extends StatelessWidget {
   }
 }
 
-
 /// PHONE INPUT
-
-
 class _PhoneInput extends StatelessWidget {
   const _PhoneInput();
 
@@ -77,10 +71,7 @@ class _PhoneInput extends StatelessWidget {
   }
 }
 
-
 /// CONTINUE BUTTON
-
-
 class _ContinueButton extends StatelessWidget {
   const _ContinueButton();
 
@@ -104,17 +95,12 @@ class _ContinueButton extends StatelessWidget {
   }
 }
 
-
 /// TEST / DEBUG LINKS
-
-
 class _TestLinks extends StatelessWidget {
   const _TestLinks();
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Column(
       children: [
         TextButton(
@@ -128,6 +114,13 @@ class _TestLinks extends StatelessWidget {
             Navigator.pushNamed(context, '/test-screens');
           },
           child: const Text('Test Screens'),
+        ),
+        // Add Admin Dashboard test button
+        TextButton(
+          onPressed: () {
+            Navigator.pushNamed(context, AppRoutes.adminDashboard);
+          },
+          child: const Text('Admin Dashboard (Test)'),
         ),
       ],
     );
