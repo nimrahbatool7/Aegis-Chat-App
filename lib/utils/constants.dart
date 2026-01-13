@@ -39,102 +39,166 @@ class AppRoutes {
   static const threatWarning = '/threat-warning';
 
   static const adminDashboard = '/admin-dashboard';
-static const userManagement = '/user-management';
-static const userDetails = '/user-details';
-static const systemHealth = '/system-health';
-static const mlAnalytics = '/ml-analytics';
-static const activitySummary = '/activity-summary';
+  static const userManagement = '/user-management';
+  static const userDetails = '/user-details';
+  static const systemHealth = '/system-health';
+  static const mlAnalytics = '/ml-analytics';
+  static const activitySummary = '/activity-summary';
 }
 
 class DummyData {
-  static List<Chat> chats = [
-    Chat(
+  static List<ChatModel> chats = [
+    ChatModel(
       id: '1',
       name: 'Nimrah Batool',
       lastMessage: 'I wanted to discuss the project',
-      time: '2:35 PM',
+      lastMessageTime: '2:35 PM',
       avatar: 'NB',
       unreadCount: 1,
     ),
-    Chat(
+    ChatModel(
       id: '2',
       name: 'Team Alpha',
       lastMessage: 'Thanks for the update',
-      time: '1:15 PM',
+      lastMessageTime: '1:15 PM',
       avatar: 'TA',
       isGroup: true,
+      unreadCount: 3,
     ),
-    Chat(
+    ChatModel(
       id: '3',
       name: 'Sir Taimoor',
       lastMessage: 'Can you review the document?',
-      time: '11:12 AM',
+      lastMessageTime: '11:12 AM',
       avatar: 'ST',
+      unreadCount: 0,
     ),
-    Chat(
+    ChatModel(
       id: '4',
       name: 'Talat Hussain',
       lastMessage: 'New modules are ready',
-      time: 'Wednesday',
+      lastMessageTime: 'Wednesday',
       avatar: 'TH',
+      unreadCount: 0,
     ),
-    Chat(
+    ChatModel(
       id: '5',
       name: 'M. Huzafia Jawed',
       lastMessage: 'Perfect, talk to you soon',
-      time: 'Wednesday',
+      lastMessageTime: 'Wednesday',
       avatar: 'MH',
+      unreadCount: 0,
     ),
-    Chat(
+    ChatModel(
       id: '6',
       name: 'Unknown Contact',
       lastMessage: 'The presentation for tomorrow',
-      time: 'Monday',
+      lastMessageTime: 'Monday',
       avatar: 'UC',
+      unreadCount: 2,
+    ),
+    ChatModel(
+      id: '7',
+      name: 'Sarah Khan',
+      lastMessage: 'Meeting at 3 PM tomorrow',
+      lastMessageTime: 'Yesterday',
+      avatar: 'SK',
+      unreadCount: 1,
+    ),
+    ChatModel(
+      id: '8',
+      name: 'Ahmed Ali',
+      lastMessage: 'Files uploaded successfully',
+      lastMessageTime: '2 days ago',
+      avatar: 'AA',
+      unreadCount: 0,
     ),
   ];
 
-  static List<Contact> contacts = [
-    Contact(
+  static List<ContactModel> contacts = [
+    ContactModel(
       id: '1',
-      name: 'M. Huzafia Jawed',
+      name: 'Nimrah',
+      phoneNumber: '+92 300 1234567',
       status: 'online',
-      avatar: 'MH',
+      avatar: 'N',
       isOnline: true,
-    ),
-    Contact(
-      id: '2',
-      name: 'Nimrah Batool',
-      status: 'Active 2h ago',
-      avatar: 'NB',
       isOnAegis: true,
     ),
-    Contact(
+    ContactModel(
+      id: '2',
+      name: 'huzaifa jawed',
+      phoneNumber: '+92 300 2234567',
+      status: 'Active 2h ago',
+      avatar: 'HJ',
+      isOnAegis: true,
+    ),
+    ContactModel(
       id: '3',
       name: 'Talat Hussain',
+      phoneNumber: '+92 300 3234567',
       status: 'online',
       avatar: 'TH',
       isOnline: true,
+      isOnAegis: true,
     ),
-    Contact(
+    ContactModel(
       id: '4',
       name: 'Sir Taimoor Riaz',
+      phoneNumber: '+92 300 4234567',
       status: 'Active 14 min ago',
       avatar: 'ST',
       isOnAegis: true,
     ),
-    Contact(
+
+    // Not on Aegis (Invite Friends)
+    ContactModel(
       id: '5',
       name: 'Sir Majid Zaman',
-      status: 'online',
+      phoneNumber: '+92 300 5234567',
+      status: 'Not on Aegis',
       avatar: 'SM',
-      isOnline: true,
+      isOnAegis: false,
     ),
-    Contact(
+    ContactModel(
       id: '6',
       name: 'Michael Brown',
+      phoneNumber: '+92 300 6234567',
       status: 'Not on Aegis',
       avatar: 'MB',
+      isOnAegis: false,
+    ),
+    // More non-Aegis contacts
+    ContactModel(
+      id: '7',
+      name: 'Sarah Khan',
+      phoneNumber: '+92 300 7234567',
+      status: 'Not on Aegis',
+      avatar: 'SK',
+      isOnAegis: false,
+    ),
+    ContactModel(
+      id: '8',
+      name: 'Ahmed ',
+      phoneNumber: '+92 300 8234567',
+      status: 'Not on Aegis',
+      avatar: 'AA',
+      isOnAegis: false,
+    ),
+    ContactModel(
+      id: '9',
+      name: 'amina',
+      phoneNumber: '+92 300 9234567',
+      status: 'Not on Aegis',
+      avatar: 'EW',
+      isOnAegis: false,
+    ),
+    ContactModel(
+      id: '10',
+      name: 'samia',
+      phoneNumber: '+92 301 0234567',
+      status: 'Not on Aegis',
+      avatar: 'DS',
       isOnAegis: false,
     ),
   ];

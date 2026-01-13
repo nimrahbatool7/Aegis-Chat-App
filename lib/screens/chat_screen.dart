@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-
+import '../core/constants/app_constants.dart';
 import '../widgets/message_bubble.dart';
 import '../models/chat_model.dart';
 import 'media_attachment_options.dart';
 
 class ChatScreen extends StatefulWidget {
-  final Chat chat;
+  final ChatModel chat;
 
   const ChatScreen({super.key, required this.chat});
 
@@ -19,11 +19,55 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<Map<String, dynamic>> _messages = [
     {'text': 'I wanted to discuss the project', 'time': '2:30 PM', 'isMe': false},
     {'text': 'Hi I\'m doing great thanks for asking', 'time': '2:31 PM', 'isMe': true},
-    {'text': 'Sure, I\'m available to discuss.', 'time': '2:32 PM', 'isMe': false},
-    {'text': 'What would you like to know?', 'time': '2:32 PM', 'isMe': true},
-    {'text': 'Perfect! Can we schedule a call for tomorrow at 2 PM?', 'time': '2:33 PM', 'isMe': false},
-    {'text': 'Meeting Tomorrow at Q210', 'time': '2:34 PM', 'isMe': false},
+    {'text': 'Check out this suspicious link: http://malicious-site.com', 'time': '2:32 PM', 'isMe': false, 'type': 'harmfulLink'},
+    {'text': 'Also, please review this attached security report.', 'time': '2:32 PM', 'isMe': false, 'type': 'malwareFile', 'fileName': 'security_report.pdf'},
+    {'text': 'Sure, I\'m available to discuss.', 'time': '2:33 PM', 'isMe': false},
+    {'text': 'Normal document for testing', 'time': '2:34 PM', 'isMe': false, 'type': 'file'},
   ];
+
+  void _handleMessageClick(Map<String, dynamic> message) {
+    final type = message['type'] ?? 'text';
+    
+    if (type == 'harmfulLink') {
+      Navigator.pushNamed(
+        context,
+        AppConstants.threatWarningRoute,
+        arguments: {
+          'type': 'harmfulLink',
+          'linkUrl': 'http://malicious-site.com',
+          'senderName': widget.chat.name,
+          'description': 'This link is suspected to be a phishing attempt.',
+        },
+      );
+    } else if (type == 'malwareFile') {
+      Navigator.pushNamed(
+        context,
+        AppConstants.threatWarningRoute,
+        arguments: {
+          'type': 'malwareFile',
+          'fileName': message['fileName'] ?? 'report.pdf',
+          'fileSize': '2.4 MB',
+          'senderName': widget.chat.name,
+          'description': 'Potential malware detected in this attachment.',
+        },
+      );
+    } else if (type == 'file') {
+      // Show "can't be opened" dialog
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('File Error'),
+          content: const Text('This file could not be opened. The format is either unsupported or the file is corrupted.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
 
   void _sendMessage() {
     final text = _messageController.text.trim();
@@ -116,11 +160,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   return MessageBubble(
                     message: message['text'],
                     time: message['time'],
-                    isMe: message['isMe'],
+                    isMe: message['isMe'] ?? false,
+                    messageType: message['type'] ?? 'text',
+                    onTap: () => _handleMessageClick(message),
                     isFirstOfGroup: index == 0 ||
-                        _messages[index - 1]['isMe'] != message['isMe'],
+                        (_messages[index - 1]['isMe'] ?? false) != (message['isMe'] ?? false),
                     isLastOfGroup: index == _messages.length - 1 ||
-                        _messages[index + 1]['isMe'] != message['isMe'],
+                        (_messages[index + 1]['isMe'] ?? false) != (message['isMe'] ?? false),
                   );
                 },
               ),

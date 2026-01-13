@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/contact_model.dart';
 
 class ContactProfileScreen extends StatelessWidget {
-  final Contact contact;
+  final ContactModel contact;
 
   const ContactProfileScreen({super.key, required this.contact});
 

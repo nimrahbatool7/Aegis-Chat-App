@@ -8,6 +8,8 @@ class MessageBubble extends StatelessWidget {
   final bool isFirstOfGroup;
   final bool isLastOfGroup;
   final String? senderInitials;
+  final String messageType; // 'text', 'link', 'file', 'harmfulLink', 'malwareFile'
+  final VoidCallback? onTap;
 
   const MessageBubble({
     super.key,
@@ -16,7 +18,9 @@ class MessageBubble extends StatelessWidget {
     required this.isMe,
     this.isFirstOfGroup = true,
     this.isLastOfGroup = true,
-    this.senderInitials = 'NB', // Default initials
+    this.senderInitials = 'NB',
+    this.messageType = 'text',
+    this.onTap,
   });
 
   @override
@@ -55,64 +59,74 @@ class MessageBubble extends StatelessWidget {
           
           // Message bubble
           Flexible(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.75,
-              ),
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10.0,
-              ),
-              decoration: BoxDecoration(
-                color: _getBubbleColor(isDark, isMe),
-                borderRadius: _getBorderRadius(isMe),
-                boxShadow: [
-                  if (isDark)
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 2,
-                      offset: const Offset(0, 1),
-                    )
-                  else
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.2),
-                      blurRadius: 2,
-                      offset: const Offset(0, 1),
-                    ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    message,
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _getTextColor(isDark, isMe),
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        time,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: _getTimeColor(isDark, isMe),
-                        ),
+            child: GestureDetector(
+              onTap: onTap,
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.75,
+                ),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16.0,
+                  vertical: 10.0,
+                ),
+                decoration: BoxDecoration(
+                  color: _getBubbleColor(isDark, isMe),
+                  borderRadius: _getBorderRadius(isMe),
+                  border: _getBorder(isDark),
+                  boxShadow: [
+                    if (isDark)
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
+                      )
+                    else
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        blurRadius: 2,
+                        offset: const Offset(0, 1),
                       ),
-                      if (isMe) ...[
-                        const SizedBox(width: 4),
-                        Icon(
-                          Icons.done_all,
-                          size: 12,
-                          color: _getStatusIconColor(isDark),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (messageType == 'file' || messageType == 'malwareFile')
+                      _buildFilePreview(isDark),
+                    
+                    Text(
+                      message,
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: _getTextColor(isDark, isMe),
+                        decoration: messageType == 'link' || messageType == 'harmfulLink' 
+                          ? TextDecoration.underline 
+                          : null,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          time,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: _getTimeColor(isDark, isMe),
+                          ),
                         ),
+                        if (isMe) ...[
+                          const SizedBox(width: 4),
+                          Icon(
+                            Icons.done_all,
+                            size: 12,
+                            color: _getStatusIconColor(isDark),
+                          ),
+                        ],
                       ],
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -132,9 +146,42 @@ class MessageBubble extends StatelessWidget {
     );
   }
 
+  Widget _buildFilePreview(bool isDark) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: isDark ? Colors.black26 : Colors.black12,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.insert_drive_file,
+            color: isDark ? AppColors.accentBlue : AppColors.primaryLight,
+          ),
+          const SizedBox(width: 8),
+          const Text(
+            'Document.pdf',
+            style: TextStyle(fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Border? _getBorder(bool isDark) {
+    if (messageType == 'harmfulLink' || messageType == 'malwareFile') {
+      return Border.all(color: Colors.red.withOpacity(0.5), width: 1);
+    }
+    return null;
+  }
+
   Color _getAvatarColor(bool isDark) {
     return isDark ? AppColors.accentGreen : AppColors.primaryLight;
   }
+
 
   Color _getBubbleColor(bool isDark, bool isMe) {
     if (isMe) {

@@ -4,7 +4,7 @@ import '../models/contact_model.dart';
 import '../utils/constants.dart';
 
 class ContactTile extends StatelessWidget {
-  final Contact contact;
+  final ContactModel contact;
   final VoidCallback onTap;
   final bool showInviteButton;
 
@@ -124,24 +124,24 @@ class ContactTile extends StatelessWidget {
     );
   }
 
-  Color _getAvatarColor(Contact contact, bool isDark) {
+  Color _getAvatarColor(ContactModel contact, bool isDark) {
     if (!contact.isOnAegis) {
       return Colors.grey;
     }
     return isDark ? AppColors.accentBlue : AppColors.primaryLight;
   }
 
-  Color _getStatusColor(Contact contact, bool isDark) {
+  Color _getStatusColor(ContactModel contact, bool isDark) {
     if (!contact.isOnAegis) {
       return AppColors.textDisabledDark;
     }
     if (contact.isOnline) {
-      return AppColors.accentGreen;
+      return isDark ? AppColors.accentGreen : AppColors.lightGreen;
     }
-    return isDark ? AppColors.textSecondaryDark : Colors.grey[600]!;
+    return isDark ? AppColors.textSecondaryDark : Colors.grey;
   }
 
-  IconData _getStatusIcon(Contact contact) {
+  IconData _getStatusIcon(ContactModel contact) {
     if (!contact.isOnAegis) {
       return Icons.error_outline;
     }
@@ -151,7 +151,7 @@ class ContactTile extends StatelessWidget {
     return Icons.access_time;
   }
 
-  Widget _buildTrailingWidget(Contact contact, bool isDark) {
+  Widget _buildTrailingWidget(ContactModel contact, bool isDark) {
     if (contact.isOnAegis) {
       return Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),

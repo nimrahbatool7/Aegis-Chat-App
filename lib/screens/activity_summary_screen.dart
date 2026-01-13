@@ -15,7 +15,7 @@ class ActivitySummaryScreen extends StatelessWidget {
         elevation: 0,
       ),
       backgroundColor: AppColors.backgroundDark,
-      body: SingleChildScrollView(
+       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

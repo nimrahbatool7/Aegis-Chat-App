@@ -56,12 +56,12 @@ class ContactsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Row(
               children: [
-                Text(
+                const Text(
                   'On Aegis Chat',
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondaryDark, 
+                    color: AppColors.accentGreen, 
                   ),
                 ),
                 const Spacer(),
@@ -83,59 +83,45 @@ class ContactsScreen extends StatelessWidget {
                 return ContactTile(
                   contact: contact,
                   onTap: () {
-                    final chatList = DummyData.chats ?? [];
-                    final chat = chatList.firstWhere(
-                      (c) => c.name == contact.name,
-                      orElse: () => Chat(
-                        id: contact.id,
-                        name: contact.name,
-                        lastMessage: 'Start a conversation',
-                        time: 'Now',
-                        avatar: contact.avatar,
-                      ),
-                    );
-
-                    Navigator.push(
+                    Navigator.pushNamed(
                       context,
-                      MaterialPageRoute(
-                        builder: (context) => ChatScreen(chat: chat),
-                      ),
+                      '/contact-profile',
+                      arguments: contact,
                     );
                   },
                 );
               },
             ),
           ),
-          Container(
-            color: AppColors.surfaceDark, 
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Invite Friends',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: AppColors.textSecondaryDark, 
-                  ),
-                ),
-                const SizedBox(height: 8),
-                ...nonAegisContacts.map(
-                  (contact) => ContactTile(
-                    contact: contact,
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        '/contact-profile',
-                        arguments: contact, 
-                      );
-                    },
-                  ),
-                ),
-              ],
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Text(
+              'Invite Friends',
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textSecondaryDark, 
+              ),
             ),
           ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: nonAegisContacts.length,
+              itemBuilder: (context, index) {
+                final contact = nonAegisContacts[index];
+                return ContactTile(
+                  contact: contact,
+                  onTap: () {
+                    // Mock invite action
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Invitation sent to ${contact.name}')),
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+
         ],
       ),
     );
